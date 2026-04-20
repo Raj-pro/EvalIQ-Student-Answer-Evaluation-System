@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Question Service - Teacher</title>
+  <style>
+    :root {
+      --bg0: #0b1220;
+      --bg1: #0b1324;
+      --card: rgba(255,255,255,0.08);
+      --card2: rgba(255,255,255,0.10);
+      --border: rgba(255,255,255,0.14);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.70);
+      --primary: #7c3aed;
+      --primary2: #22c55e;
+      --danger: #ef4444;
+      --shadow: 0 16px 40px rgba(0,0,0,0.35);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% 0%, rgba(124,58,237,0.35), transparent 55%),
+        radial-gradient(1000px 500px at 90% 20%, rgba(34,197,94,0.20), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      min-height: 100vh;
+    }
+    a { color: inherit; }
+    .container { max-width: 980px; margin: 0 auto; padding: 26px 18px 48px; }
+    .topbar {
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .brand { display:flex; flex-direction:column; gap:2px; }
+    .brand h1 { font-size: 16px; margin: 0; letter-spacing: 0.2px; }
+    .brand .sub { font-size: 12px; color: var(--muted); }
+    .pill {
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    h2 { font-size: 14px; margin: 0 0 10px; color: rgba(255,255,255,0.92); }
+    h3 { margin: 12px 0 8px; font-size: 13px; color: rgba(255,255,255,0.86); }
+    p { margin: 10px 0; color: var(--muted); }
+    .grid { display: grid; gap: 14px; margin-top: 18px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 720px) { .row { grid-template-columns: 1fr; } }
+    label { display: block; font-size: 12px; margin: 10px 0 6px; color: var(--muted); }
+    input, textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 12px;
+      font-size: 14px;
+      color: var(--text);
+      background: rgba(12,18,32,0.55);
+      outline: none;
+    }
+    textarea { min-height: 86px; resize: vertical; }
+    input:focus, textarea:focus { border-color: rgba(124,58,237,0.65); box-shadow: 0 0 0 3px rgba(124,58,237,0.18); }
+    .btnrow { display:flex; gap:10px; margin-top: 12px; flex-wrap: wrap; }
+    button {
+      padding: 10px 14px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+    }
+    button:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.26); transform: translateY(-1px); }
+    button:active { transform: translateY(0px); }
+    .btn-primary { background: rgba(124,58,237,0.22); border-color: rgba(124,58,237,0.55); }
+    .btn-primary:hover { background: rgba(124,58,237,0.28); border-color: rgba(124,58,237,0.70); }
+    .btn-success { background: rgba(34,197,94,0.16); border-color: rgba(34,197,94,0.55); }
+    .btn-success:hover { background: rgba(34,197,94,0.22); border-color: rgba(34,197,94,0.70); }
+    .btn-danger { background: rgba(239,68,68,0.14); border-color: rgba(239,68,68,0.55); }
+    .btn-danger:hover { background: rgba(239,68,68,0.18); border-color: rgba(239,68,68,0.70); }
+    .msg {
+      margin-top: 12px;
+      font-size: 13px;
+      white-space: pre-wrap;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      color: var(--muted);
+    }
+    .ok { color: rgba(34,197,94,0.95); border-color: rgba(34,197,94,0.35); background: rgba(34,197,94,0.10); }
+    .err { color: rgba(239,68,68,0.95); border-color: rgba(239,68,68,0.35); background: rgba(239,68,68,0.10); }
+    .divider { border: none; border-top: 1px solid rgba(255,255,255,0.14); margin: 16px 0; }
+    pre {
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 12px;
+      border-radius: 12px;
+      overflow: auto;
+      color: rgba(255,255,255,0.88);
+    }
+    .subcard {
+      border: 1px dashed rgba(255,255,255,0.22);
+      border-radius: 14px;
+      padding: 12px;
+      margin: 10px 0;
+      background: rgba(255,255,255,0.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">
+        <h1>Question Service</h1>
+        <div class="sub">Teacher console • Create tests, add questions, preview content</div>
+      </div>
+      <div class="pill">UI • /ui</div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>1) Create Test</h2>
+    <div class="row">
+      <div>
+        <label for="testId">Test ID</label>
+        <input id="testId" placeholder="e.g., 01" />
+      </div>
+      <div>
+        <label for="teacherId">Teacher ID</label>
+        <input id="teacherId" placeholder="e.g., ram" />
+      </div>
+    </div>
+    <label for="title">Title</label>
+    <input id="title" placeholder="e.g., Docker Basics" />
+
+    <div class="btnrow">
+      <button id="btnCreate" class="btn-primary">Create Test</button>
+    </div>
+    <div id="createMsg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h2>2) Add Questions</h2>
+        <p>
+          Add one question at a time or submit multiple questions in bulk. Bulk submission is great for setting up a test quickly.
+        </p>
+
+        <h3>Bulk Add</h3>
+        <div id="bulkList"></div>
+        <div class="btnrow">
+          <button id="btnAddRow" type="button">Add Another Question</button>
+          <button id="btnBulk" type="button" class="btn-success">Submit All Questions</button>
+        </div>
+        <div id="bulkMsg" class="msg"></div>
+
+        <hr class="divider" />
+
+        <h3>Single Add</h3>
+        <label for="qText">Question</label>
+        <textarea id="qText" placeholder="Enter question..."></textarea>
+
+        <label for="expAns">Expected Answer</label>
+        <textarea id="expAns" placeholder="Enter expected answer..."></textarea>
+
+        <div class="btnrow">
+          <button id="btnAdd" class="btn-primary">Add Question</button>
+        </div>
+        <div id="addMsg" class="msg"></div>
+      </div>
+
+      <div class="card">
+        <h2>3) Preview Test</h2>
+        <p>Loads the test and all questions currently stored for the Test ID.</p>
+        <div class="btnrow">
+          <button id="btnView">Load Test</button>
+        </div>
+        <div id="viewMsg" class="msg"></div>
+        <pre id="viewOut" style="display:none;"></pre>
+      </div>
+    </div>
+  </div>
+
+<script>
+  function el(tag, attrs = {}, children = []) {
+    const n = document.createElement(tag);
+    Object.entries(attrs).forEach(([k, v]) => {
+      if (k === 'className') n.className = v;
+      else if (k === 'text') n.textContent = v;
+      else n.setAttribute(k, v);
+    });
+    children.forEach(c => n.appendChild(c));
+    return n;
+  }
+
+  function setMsg(el, ok, text) {
+    el.textContent = text;
+    el.className = 'msg ' + (ok ? 'ok' : 'err');
+  }
+
+  async function postJson(url, body) {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const ct = res.headers.get('content-type') || '';
+    const data = ct.includes('application/json') ? await res.json() : await res.text();
+    if (!res.ok) throw new Error((data && data.detail) ? data.detail : JSON.stringify(data));
+    return data;
+  }
+
+  async function getJson(url) {
+    const res = await fetch(url);
+    const data = await res.json();
+    if (!res.ok) throw new Error((data && data.detail) ? data.detail : JSON.stringify(data));
+    return data;
+  }
+
+  function addBulkRow(questionText = '', expectedAnswer = '') {
+    const list = document.getElementById('bulkList');
+    const row = el('div', { className: 'subcard' });
+
+    const qLabel = el('label', { text: 'Question' });
+    const q = el('textarea', { className: 'bulk-q', placeholder: 'Enter question...' });
+    q.value = questionText;
+
+    const aLabel = el('label', { text: 'Expected Answer' });
+    const a = el('textarea', { className: 'bulk-a', placeholder: 'Enter expected answer...' });
+    a.value = expectedAnswer;
+
+    const removeBtn = el('button', { type: 'button', text: 'Remove', className: 'btn-danger', style: 'margin-top:10px;' });
+    removeBtn.addEventListener('click', () => row.remove());
+
+    row.appendChild(qLabel);
+    row.appendChild(q);
+    row.appendChild(aLabel);
+    row.appendChild(a);
+    row.appendChild(removeBtn);
+    list.appendChild(row);
+  }
+
+  // default: show 2 rows
+  addBulkRow();
+  addBulkRow();
+
+  document.getElementById('btnAddRow').addEventListener('click', () => addBulkRow());
+
+  document.getElementById('btnCreate').addEventListener('click', async () => {
+    const msg = document.getElementById('createMsg');
+    setMsg(msg, true, 'Submitting...');
+    try {
+      const test_id = document.getElementById('testId').value.trim();
+      const teacher_id = document.getElementById('teacherId').value.trim();
+      const title = document.getElementById('title').value.trim();
+      if (!test_id || !teacher_id || !title) throw new Error('Enter test_id, teacher_id, title');
+      const data = await postJson('/tests', { test_id, teacher_id, title });
+      setMsg(msg, true, `Created test ${data.test_id}`);
+    } catch (e) {
+      setMsg(msg, false, 'Error: ' + e.message);
+    }
+  });
+
+  document.getElementById('btnAdd').addEventListener('click', async () => {
+    const msg = document.getElementById('addMsg');
+    setMsg(msg, true, 'Submitting...');
+    try {
+      const test_id = document.getElementById('testId').value.trim();
+      const question_text = document.getElementById('qText').value.trim();
+      const expected_answer = document.getElementById('expAns').value.trim();
+      if (!test_id) throw new Error('Enter Test ID first');
+      if (!question_text || !expected_answer) throw new Error('Enter question and expected answer');
+      const data = await postJson('/questions', { test_id, question_text, expected_answer });
+      setMsg(msg, true, `Added. question_id = ${data.question_id}`);
+      document.getElementById('qText').value = '';
+      document.getElementById('expAns').value = '';
+    } catch (e) {
+      setMsg(msg, false, 'Error: ' + e.message);
+    }
+  });
+
+  document.getElementById('btnBulk').addEventListener('click', async () => {
+    const msg = document.getElementById('bulkMsg');
+    setMsg(msg, true, 'Submitting...');
+    try {
+      const test_id = document.getElementById('testId').value.trim();
+      if (!test_id) throw new Error('Enter Test ID first');
+
+      const questions = Array.from(document.querySelectorAll('#bulkList .subcard')).map(block => {
+        const q = block.querySelector('textarea.bulk-q').value.trim();
+        const a = block.querySelector('textarea.bulk-a').value.trim();
+        return { question_text: q, expected_answer: a };
+      });
+
+      if (!questions.length) throw new Error('Add at least one question row.');
+      if (questions.some(x => !x.question_text || !x.expected_answer)) {
+        throw new Error('Please fill question and expected answer for every row.');
+      }
+
+      const data = await postJson(`/tests/${encodeURIComponent(test_id)}/questions`, { questions });
+      setMsg(msg, true, `Added ${data.question_ids.length} questions. IDs: ${data.question_ids.join(', ')}`);
+    } catch (e) {
+      setMsg(msg, false, 'Error: ' + e.message);
+    }
+  });
+
+  document.getElementById('btnView').addEventListener('click', async () => {
+    const msg = document.getElementById('viewMsg');
+    const out = document.getElementById('viewOut');
+    out.style.display = 'none';
+    setMsg(msg, true, 'Loading...');
+    try {
+      const test_id = document.getElementById('testId').value.trim();
+      if (!test_id) throw new Error('Enter Test ID');
+      const data = await getJson(`/tests/${encodeURIComponent(test_id)}`);
+      out.textContent = JSON.stringify(data, null, 2);
+      out.style.display = 'block';
+      setMsg(msg, true, 'Loaded');
+    } catch (e) {
+      setMsg(msg, false, 'Error: ' + e.message);
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+global:
+  scrape_interval: 10s
+  evaluation_interval: 10s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["prometheus:9090"]
+
+  - job_name: "api-gateway"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["api-gateway:8000"]
+
+  - job_name: "question-service"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["question-service:8000"]
+
+  - job_name: "student-answer-service"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["student-answer-service:8000"]
+
+  - job_name: "ml-evaluation-service"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["ml-evaluation-service:8000"]
+
+  - job_name: "rank-service"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["rank-service:8000"]

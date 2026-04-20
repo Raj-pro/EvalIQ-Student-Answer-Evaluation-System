@@ -1,0 +1,227 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #09090b;
+    color: #fafafa;
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+  }
+
+  /* Dot-grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-image: radial-gradient(circle, #ffffff0a 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+  }
+
+  #root {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Animated orb container */
+  .bg-orbs {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .bg-orbs span {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0;
+    animation: orbFloat linear infinite;
+  }
+
+  .bg-orbs span:nth-child(1) {
+    width: 520px; height: 520px;
+    background: radial-gradient(circle, #6366f130, #6366f108);
+    top: -10%; left: -5%;
+    animation-duration: 18s;
+    animation-delay: 0s;
+    opacity: 1;
+  }
+
+  .bg-orbs span:nth-child(2) {
+    width: 420px; height: 420px;
+    background: radial-gradient(circle, #8b5cf628, #8b5cf608);
+    bottom: -8%; right: -5%;
+    animation-duration: 22s;
+    animation-delay: -6s;
+    opacity: 1;
+  }
+
+  .bg-orbs span:nth-child(3) {
+    width: 340px; height: 340px;
+    background: radial-gradient(circle, #06b6d420, #06b6d406);
+    top: 40%; left: 55%;
+    animation-duration: 26s;
+    animation-delay: -12s;
+    opacity: 1;
+  }
+
+  .bg-orbs span:nth-child(4) {
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, #a855f722, #a855f706);
+    top: 65%; left: 15%;
+    animation-duration: 20s;
+    animation-delay: -4s;
+    opacity: 1;
+  }
+
+  .bg-orbs span:nth-child(5) {
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, #3b82f618, #3b82f605);
+    top: 20%; right: 20%;
+    animation-duration: 15s;
+    animation-delay: -9s;
+    opacity: 1;
+  }
+
+  @keyframes orbFloat {
+    0%   { transform: translate(0px,   0px)   scale(1);    }
+    20%  { transform: translate(30px,  -25px) scale(1.04); }
+    40%  { transform: translate(-20px, 40px)  scale(0.97); }
+    60%  { transform: translate(40px,  20px)  scale(1.06); }
+    80%  { transform: translate(-30px, -10px) scale(0.98); }
+    100% { transform: translate(0px,   0px)   scale(1);    }
+  }
+
+  /* Subtle beam / streak that sweeps across */
+  .bg-beam {
+    position: fixed;
+    top: -20%;
+    left: -40%;
+    width: 80%;
+    height: 140%;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      #6366f109 50%,
+      #8b5cf90a 55%,
+      transparent 65%
+    );
+    transform: skewX(-15deg);
+    animation: beamSweep 12s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes beamSweep {
+    0%   { transform: skewX(-15deg) translateX(0%);    opacity: 0; }
+    10%  { opacity: 1; }
+    50%  { transform: skewX(-15deg) translateX(180%);  opacity: 1; }
+    60%  { opacity: 0; }
+    100% { transform: skewX(-15deg) translateX(180%);  opacity: 0; }
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #111113;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #3f3f46;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #52525b;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-[#111113] border border-[#27272a] rounded-xl;
+  }
+
+  .card-hover {
+    @apply card transition-all duration-200 hover:border-[#3f3f46] hover:shadow-lg hover:shadow-black/30;
+  }
+
+  .input-field {
+    @apply w-full bg-[#18181b] border border-[#27272a] rounded-lg px-3 py-2.5 text-sm text-[#fafafa] placeholder-[#52525b]
+           focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500
+           transition-all duration-200;
+  }
+
+  .textarea-field {
+    @apply input-field resize-none;
+  }
+
+  .btn-primary {
+    @apply bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2.5 rounded-lg text-sm
+           transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50
+           disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center;
+  }
+
+  .btn-secondary {
+    @apply bg-[#27272a] hover:bg-[#3f3f46] text-[#fafafa] font-medium px-4 py-2.5 rounded-lg text-sm
+           transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-zinc-500/30
+           disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center;
+  }
+
+  .btn-ghost {
+    @apply hover:bg-[#18181b] text-[#a1a1aa] hover:text-[#fafafa] font-medium px-3 py-2 rounded-lg text-sm
+           transition-all duration-200 focus:outline-none flex items-center gap-2;
+  }
+
+  .label {
+    @apply block text-xs font-medium text-[#a1a1aa] mb-1.5 uppercase tracking-wider;
+  }
+
+  .section-title {
+    @apply text-lg font-semibold text-[#fafafa] mb-1;
+  }
+
+  .section-sub {
+    @apply text-sm text-[#71717a];
+  }
+
+  .divider {
+    @apply border-t border-[#27272a] my-6;
+  }
+
+  .badge-outstanding {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold
+           bg-emerald-500/15 text-emerald-400 border border-emerald-500/20;
+  }
+
+  .badge-good {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold
+           bg-blue-500/15 text-blue-400 border border-blue-500/20;
+  }
+
+  .badge-partial {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold
+           bg-amber-500/15 text-amber-400 border border-amber-500/20;
+  }
+
+  .badge-poor {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold
+           bg-red-500/15 text-red-400 border border-red-500/20;
+  }
+}

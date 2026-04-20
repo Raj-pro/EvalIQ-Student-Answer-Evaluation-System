@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Answer Evaluation - Results</title>
+  <style>
+    :root {
+      --bg0: #0b1220;
+      --bg1: #0b1324;
+      --card: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.14);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.70);
+      --primary: #06b6d4;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --shadow: 0 16px 40px rgba(0,0,0,0.35);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% 0%, rgba(6,182,212,0.26), transparent 55%),
+        radial-gradient(1000px 500px at 90% 20%, rgba(34,197,94,0.18), transparent 60%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 1020px; margin: 0 auto; padding: 26px 18px 48px; }
+    .topbar {
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .brand { display:flex; flex-direction:column; gap:2px; }
+    .brand h1 { font-size: 16px; margin: 0; }
+    .brand .sub { font-size: 12px; color: var(--muted); }
+    .tabs { display:flex; gap:8px; align-items:center; flex-wrap: wrap; }
+    .tab {
+      font-size: 12px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: var(--muted);
+    }
+    .tab.active { color: rgba(255,255,255,0.92); border-color: rgba(6,182,212,0.55); background: rgba(6,182,212,0.16); }
+    .grid { display:grid; gap:14px; margin-top: 18px; }
+    h2 { font-size: 14px; margin: 0 0 10px; }
+    p { margin: 10px 0; color: var(--muted); }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    label { display: block; font-size: 12px; margin: 10px 0 6px; color: var(--muted); }
+    input {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 12px;
+      font-size: 14px;
+      color: var(--text);
+      background: rgba(12,18,32,0.55);
+      outline: none;
+    }
+    input:focus { border-color: rgba(6,182,212,0.65); box-shadow: 0 0 0 3px rgba(6,182,212,0.18); }
+    .btnrow { display:flex; gap:10px; margin-top: 12px; flex-wrap: wrap; }
+    button {
+      padding: 10px 14px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+    }
+    button:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.26); transform: translateY(-1px); }
+    button:active { transform: translateY(0px); }
+    .btn-primary { background: rgba(6,182,212,0.18); border-color: rgba(6,182,212,0.55); }
+    .btn-primary:hover { background: rgba(6,182,212,0.24); border-color: rgba(6,182,212,0.70); }
+    .msg {
+      margin-top: 12px;
+      font-size: 13px;
+      white-space: pre-wrap;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      color: var(--muted);
+    }
+    .ok { color: rgba(34,197,94,0.95); border-color: rgba(34,197,94,0.35); background: rgba(34,197,94,0.10); }
+    .err { color: rgba(239,68,68,0.95); border-color: rgba(239,68,68,0.35); background: rgba(239,68,68,0.10); }
+    .kv {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.22);
+    }
+    .k { font-weight: 650; color: rgba(255,255,255,0.86); }
+    .v { color: rgba(255,255,255,0.92); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">
+        <h1>Automated Student Answer Evaluation</h1>
+        <div class="sub">Gateway demo UI • Evaluate a single answer_id</div>
+      </div>
+      <div class="tabs">
+        <a class="tab" href="/ui">Input</a>
+        <span class="tab active">Results</span>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Evaluate Answer</h2>
+
+    <label for="answerId">Answer ID</label>
+    <input id="answerId" type="number" min="1" placeholder="e.g., 1" />
+
+        <div class="btnrow">
+          <button id="btnEval" class="btn-primary">Evaluate</button>
+        </div>
+
+    <div id="evalMsg" class="msg"></div>
+
+        <div id="out" class="kv" style="display:none;">
+          <div class="k">evaluation_id</div><div id="oEval" class="v"></div>
+          <div class="k">answer_id</div><div id="oAns" class="v"></div>
+          <div class="k">score</div><div id="oScore" class="v"></div>
+          <div class="k">rank</div><div id="oRank" class="v"></div>
+          <div class="k">similarity</div><div id="oSim" class="v"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  function setMsg(el, ok, text) {
+    el.textContent = text;
+    el.className = 'msg ' + (ok ? 'ok' : 'err');
+  }
+
+  async function postJson(url, body) {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    const contentType = res.headers.get('content-type') || '';
+    const data = contentType.includes('application/json') ? await res.json() : await res.text();
+
+    if (!res.ok) {
+      const detail = (data && data.detail) ? data.detail : (typeof data === 'string' ? data : JSON.stringify(data));
+      throw new Error(detail);
+    }
+    return data;
+  }
+
+  document.getElementById('btnEval').addEventListener('click', async () => {
+    const msg = document.getElementById('evalMsg');
+    const out = document.getElementById('out');
+    out.style.display = 'none';
+
+    setMsg(msg, true, 'Evaluating...');
+
+    try {
+      const answer_id = Number(document.getElementById('answerId').value);
+      if (!answer_id || answer_id < 1) throw new Error('Please enter a valid Answer ID.');
+
+      const data = await postJson('/evaluate', { answer_id });
+
+      document.getElementById('oEval').textContent = data.evaluation_id;
+      document.getElementById('oAns').textContent = data.answer_id;
+      document.getElementById('oScore').textContent = data.score;
+      document.getElementById('oRank').textContent = data.rank;
+      document.getElementById('oSim').textContent = data.similarity;
+
+      out.style.display = 'grid';
+      setMsg(msg, true, 'Done.');
+    } catch (e) {
+      setMsg(msg, false, 'Error: ' + e.message);
+    }
+  });
+</script>
+</body>
+</html>
